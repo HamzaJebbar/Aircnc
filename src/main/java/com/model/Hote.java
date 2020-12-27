@@ -33,7 +33,7 @@ public class Hote extends Voyageur{
 	
 	
 	//Afficher la liste des appartements
-		public List<Appartement> listDesChambres() {
+		public List<Appartement> listDesAppartement() {
 		        return appartement;
 		    }
 		
