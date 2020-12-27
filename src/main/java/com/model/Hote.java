@@ -4,51 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hote extends Voyageur{
-	
-	private List<Appartement> appartement= new ArrayList <Appartement>();
-	
 
-	
+	private List<Appartement> appartements= new ArrayList<>();
+
 	public Hote() {
 		super();
 	
 	}
-	
-	
-	public Hote(String id,String nom,String prenom,int age,String sexe) {
-		
-		super(id,nom,prenom,age,sexe);
-		
-		if(appartement.size()!=0 ) {
-			System.out.println("Afficher les appartements de cet hote");
-			//System.out.println(appartement);
-		}
-		appartement.add(new Appartement());
-		appartement.add(new Appartement("chiraton",24,2,1,70.50,1));
-	
+
+	public Hote(String id, String nom, String prenom, int age, String sexe, List<Appartement> appartement) {
+		super(id, nom, prenom, age, sexe);
+		this.appartements = appartement;
 	}
-	
-	
-	
-	
-	
-	//Afficher la liste des appartements
-		public List<Appartement> listDesChambres() {
-		        return appartement;
-		    }
-		
-	
-	//Verifier si la chambre est reserve ou non
-		
-	public boolean estReservee(Appartement app) {
-		if(appartement.contains(app)) {
-			return true;
-		
+
+	public List<Appartement> getAppartement() {
+		return appartements;
 	}
-			return false;
-	
+
+	public void setAppartement(List<Appartement> appartement) {
+		this.appartements = appartement;
 	}
-	
+
+	public void addApt(Appartement appartement){
+		appartements.add(appartement);
+	}
+
 	public String toString (){
         return "Hote[id:" + getId()+ ",nom:" + getNom() + ",prenom:"+ getPrenom() + ",age:" + getAge() + ",sexe:" +getSexe() +"] " ;
     }

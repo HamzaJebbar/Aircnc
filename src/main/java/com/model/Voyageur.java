@@ -10,22 +10,15 @@ public class Voyageur {
 	private String nom;
 	private String prenom;
 	private int age;
-	private int etage;
 	private String sexe;
 	
-	private List<Appartement> appartement_fav= new ArrayList<Appartement>();
+	private List<Appartement> appartement_fav= new ArrayList<>();
 	
 	//Constructeur par defaut
 	public Voyageur() {
-		this.id="1";
-		this.nom="";
-		this.prenom="";
-		this.age=23;
-		this.sexe="femme";
-		
 	}
+
 	//Construction d'initialisation
-	
 	public Voyageur(String id,String nom,String prenom,int age,String sexe) {
 		
 		this.id=id;
@@ -34,76 +27,67 @@ public class Voyageur {
 		this.age=age;
 		this.sexe=sexe;
 	}
-	
-	//Afficher les chambre favorites des voyageurs
-	
-	public List<Appartement> chambre_fav(){
-		return appartement_fav;
-		
-	}
-	
-	//ajouter une chambre favorite a la liste du voyageur
-	
-	public  List<Appartement>  addChambre(Appartement appartement){
-		appartement_fav.add(appartement);
-		return appartement_fav;
-	}
-	
-	
-	//Les getters
-	
+
+	// getters and setters
 	public String getId() {
-		return this.id;
+		return id;
 	}
-	
-	public String getNom() {
-		return this.nom;
-	}
-	
-	public String getPrenom() {
-		
-		return this.prenom;
-	}
-	
-	public int getAge() {
-		return this.age;
-	}
-	
-	public String getSexe() {
-		return this.sexe;
-	}
-	
-	public int getEtage() {
-		return this.etage;
-	}
-	
-	// Les setters
-	
+
 	public void setId(String id) {
-		this.id=id;
+		this.id = id;
 	}
-	
+
+	public String getNom() {
+		return nom;
+	}
+
 	public void setNom(String nom) {
-		this.nom= nom;
+		this.nom = nom;
 	}
-	
+
+	public String getPrenom() {
+		return prenom;
+	}
+
 	public void setPrenom(String prenom) {
-		this.prenom=prenom;
+		this.prenom = prenom;
 	}
-	
-	public void setId(int age) {
-		this.age=age;
+
+	public int getAge() {
+		return age;
 	}
-	
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getSexe() {
+		return sexe;
+	}
+
 	public void setSexe(String sexe) {
-		this.sexe=sexe;
+		this.sexe = sexe;
+	}
+
+	public List<Appartement> getAppartement_fav() {
+		return appartement_fav;
+	}
+
+	public void setAppartement_fav(List<Appartement> appartement_fav) {
+		this.appartement_fav = appartement_fav;
+	}
+
+//ajouter une chambre favorite a la liste du voyageur
+	
+	public void addAptFav(Appartement appartement){
+		appartement_fav.add(appartement);
 	}
 	
-	public void setEtage(int etage) {
-		this.etage=etage;
-	}
 	
-	//Ajouter un appartement favorite
+
+	
+
+	//Ajouter un appartement favorit
 	
 	public void AppartementFav(Appartement app) {
 		appartement_fav.add(app);
