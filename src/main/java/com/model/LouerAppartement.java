@@ -1,4 +1,4 @@
-package airBnb;
+package com.model;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,10 +66,10 @@ public class LouerAppartement {
 				
 			}else if (app.isReserve()) {
 				
-				System.out.println("l'appartement est déja loué, veuillez choisir une autre date");
+				System.out.println("l'appartement est dï¿½ja louï¿½, veuillez choisir une autre date");
 				
 			}else if(app.getnbrPersonne_max()<= nbr_max) {
-				System.out.println("Le nombre de personnes dépasse le nombre maximmum de l'appartement");
+				System.out.println("Le nombre de personnes dï¿½passe le nombre maximmum de l'appartement");
 			}
 		}
 			

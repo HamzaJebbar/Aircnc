@@ -1,4 +1,4 @@
-package airBnb;
+package com.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +38,9 @@ public class Hote extends Voyageur{
 		    }
 		
 	
-	//Vérifier si la chambre est réservé ou non 
+	//Verifier si la chambre est reserve ou non
 		
-	public boolean estRéservée(Appartement app) {
+	public boolean estReservee(Appartement app) {
 		if(appartement.contains(app)) {
 			return true;
 		

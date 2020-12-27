@@ -1,4 +1,4 @@
-package airBnb;
+package com.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Voyageur {
 		
 	}
 	
-	//ajouter une chambre favorite à la liste du voyageur
+	//ajouter une chambre favorite a la liste du voyageur
 	
 	public  List<Appartement>  addChambre(Appartement appartement){
 		appartement_fav.add(appartement);

@@ -1,4 +1,4 @@
-package airBnb;
+package com.model;
 
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Appartement {
 	private int nbrPersonne_max;
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 	
-	//Constructeur par défaut
+	//Constructeur par defaut
 	public Appartement() {
 		
 		this.adresse="";
@@ -27,7 +27,7 @@ public class Appartement {
 		
 	}
 	
-	public Appartement(String adresse, int numéro, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max) {
+	public Appartement(String adresse, int numero, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max) {
 		
 		this.adresse=adresse;
 	
