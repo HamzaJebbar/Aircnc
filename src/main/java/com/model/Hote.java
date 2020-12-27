@@ -8,7 +8,7 @@ public class Hote extends Voyageur{
 	private List<Appartement> appartement= new ArrayList <Appartement>();
 	
 
-	
+	// Constructeur par defaut
 	public Hote() {
 		super();
 	
