@@ -8,7 +8,7 @@ public class Hote extends Voyageur{
 	private List<Appartement> appartement= new ArrayList <Appartement>();
 	
 
-	// Constructeur par defaut
+	// Constructeur par defaut 
 	public Hote() {
 		super();
 	
@@ -24,7 +24,7 @@ public class Hote extends Voyageur{
 			//System.out.println(appartement);
 		}
 		appartement.add(new Appartement());
-		appartement.add(new Appartement("chiraton",24,2,1,70.50,1));
+		appartement.add(new Appartement(1,"chiraton",24,2,1,70.50,1));
 	
 	}
 	
@@ -50,7 +50,7 @@ public class Hote extends Voyageur{
 	}
 	
 	public String toString (){
-        return "Hote[id:" + getId()+ ",nom:" + getNom() + ",prenom:"+ getPrenom() + ",age:" + getAge() + ",sexe:" +getSexe() +"] " ;
+        return "Hote[id:" + getId_voy()+ ",nom:" + getNom() + ",prenom:"+ getPrenom() + ",age:" + getAge() + ",sexe:" +getSexe() +"] " ;
     }
 }
 

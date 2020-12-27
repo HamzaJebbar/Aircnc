@@ -3,21 +3,26 @@ package com.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
 
 public class Voyageur {
 
-	private String id;
+	private String id_voyageur;
 	private String nom;
 	private String prenom;
 	private int age;
-	private int etage;
 	private String sexe;
-	
 	private List<Appartement> appartement_fav= new ArrayList<Appartement>();
 	
 	//Constructeur par defaut
 	public Voyageur() {
-		this.id="1";
+		this.id_voyageur="1";
 		this.nom="";
 		this.prenom="";
 		this.age=23;
@@ -28,7 +33,7 @@ public class Voyageur {
 	
 	public Voyageur(String id,String nom,String prenom,int age,String sexe) {
 		
-		this.id=id;
+		this.id_voyageur=id;
 		this.nom=nom;
 		this.prenom=prenom;
 		this.age=age;
@@ -37,6 +42,9 @@ public class Voyageur {
 	
 	//Afficher les chambre favorites des voyageurs
 	
+	@ManyToMany
+	@JoinTable(name="LouerAppartement", 
+	joinColumns= {@JoinColumn(name="id_Voyageur)")},inverseJoinColumns= {@JoinColumn(name="id_Appartement")} )
 	public List<Appartement> chambre_fav(){
 		return appartement_fav;
 		
@@ -52,8 +60,11 @@ public class Voyageur {
 	
 	//Les getters
 	
-	public String getId() {
-		return this.id;
+	
+	@Id 
+	@GeneratedValue (strategy=GenerationType.AUTO)
+	public String getId_voy() {
+		return this.id_voyageur;
 	}
 	
 	public String getNom() {
@@ -73,14 +84,11 @@ public class Voyageur {
 		return this.sexe;
 	}
 	
-	public int getEtage() {
-		return this.etage;
-	}
 	
 	// Les setters
 	
-	public void setId(String id) {
-		this.id=id;
+	public void setId_voy(String id) {
+		this.id_voyageur=id;
 	}
 	
 	public void setNom(String nom) {
@@ -99,10 +107,7 @@ public class Voyageur {
 		this.sexe=sexe;
 	}
 	
-	public void setEtage(int etage) {
-		this.etage=etage;
-	}
-	
+
 	//Ajouter un appartement favorite
 	
 	public void AppartementFav(Appartement app) {
@@ -114,7 +119,7 @@ public class Voyageur {
 	
 	@Override
     public String toString (){
-        return "Voyageur[id:" + getId() + ",nom:" + nom+ ",prenom:"+ prenom + ",age:" + age + ",sexe:" + sexe +"] " ;
+        return "Voyageur[id:" + getId_voy() + ",nom:" + nom+ ",prenom:"+ prenom + ",age:" + age + ",sexe:" + sexe +"] " ;
     }
 	
 	
