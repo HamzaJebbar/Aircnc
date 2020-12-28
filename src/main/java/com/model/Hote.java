@@ -1,54 +1,38 @@
 package com.model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hote extends Voyageur{
-	
+
+	@OneToMany(cascade= CascadeType.ALL, mappedBy="hote")
 	private List<Appartement> appartement= new ArrayList <Appartement>();
-	
 
 	// Constructeur par defaut 
 	public Hote() {
 		super();
+	}
+
+
+	public Hote(String nom, String prenom, int age, String sexe, List<Appartement> appartement) {
+		super(nom,prenom,age,sexe);
+		this.appartement = appartement;
 	
 	}
-	
-	
-	public Hote(String id,String nom,String prenom,int age,String sexe) {
-		
-		super(id,nom,prenom,age,sexe);
-		
-		if(appartement.size()!=0 ) {
-			System.out.println("Afficher les appartements de cet hote");
-			//System.out.println(appartement);
-		}
-		appartement.add(new Appartement());
-		appartement.add(new Appartement(1,"chiraton",24,2,1,70.50,1));
-	
+
+	public List<Appartement> getAppartement() {
+		return appartement;
 	}
-	
-	
-	
-	
-	
-	//Afficher la liste des appartements
-		public List<Appartement> listDesAppartement() {
-		        return appartement;
-		    }
-		
-	
-	//Verifier si la chambre est reserve ou non
-		
-	public boolean estReservee(Appartement app) {
-		if(appartement.contains(app)) {
-			return true;
-		
+
+	public void setAppartement(List<Appartement> appartement) {
+		this.appartement = appartement;
 	}
-			return false;
-	
+
+	public  List<Appartement>  addApt(Appartement appartement){
+		this.appartement.add(appartement);
+		return this.appartement;
 	}
-	
 	public String toString (){
         return "Hote[id:" + getId_voy()+ ",nom:" + getNom() + ",prenom:"+ getPrenom() + ",age:" + getAge() + ",sexe:" +getSexe() +"] " ;
     }

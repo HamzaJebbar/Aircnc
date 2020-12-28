@@ -3,27 +3,29 @@ package com.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 
 @Entity
 public class Voyageur {
 
-	private String id_voyageur;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private String id_Voyageur;
 	private String nom;
 	private String prenom;
 	private int age;
 	private String sexe;
+
+	@ManyToMany
+	@JoinTable(name="Appart_fav",
+			joinColumns= {@JoinColumn(name="id_Voyageur)")},inverseJoinColumns= {@JoinColumn(name="id_Appartement")} )
 	private List<Appartement> appartement_fav= new ArrayList<Appartement>();
-	
+
+	@OneToMany(cascade= CascadeType.ALL, mappedBy="voyageur")
+	private List<Appartement> appartement_loue= new ArrayList<Appartement>();
+
 	//Constructeur par defaut
 	public Voyageur() {
-		this.id_voyageur="1";
 		this.nom="";
 		this.prenom="";
 		this.age=23;
@@ -32,40 +34,24 @@ public class Voyageur {
 	}
 	//Construction d'initialisation
 	
-	public Voyageur(String id,String nom,String prenom,int age,String sexe) {
-		
-		this.id_voyageur=id;
+	public Voyageur(String nom,String prenom,int age,String sexe) {
 		this.nom=nom;
 		this.prenom=prenom;
 		this.age=age;
 		this.sexe=sexe;
 	}
+
+	//ajouter un appartement favorit a la liste du voyageur
 	
-	//Afficher les chambre favorites des voyageurs
-	
-	@ManyToMany
-	@JoinTable(name="LouerAppartement", 
-	joinColumns= {@JoinColumn(name="id_Voyageur)")},inverseJoinColumns= {@JoinColumn(name="id_Appartement")} )
-	public List<Appartement> chambre_fav(){
-		return appartement_fav;
-		
-	}
-	
-	//ajouter une chambre favorite a la liste du voyageur
-	
-	public  List<Appartement>  addChambre(Appartement appartement){
+	public  List<Appartement>  addAptFav(Appartement appartement){
 		appartement_fav.add(appartement);
 		return appartement_fav;
 	}
 	
 	
 	//Les getters
-	
-	
-	@Id 
-	@GeneratedValue (strategy=GenerationType.AUTO)
 	public String getId_voy() {
-		return this.id_voyageur;
+		return this.id_Voyageur;
 	}
 	
 	public String getNom() {
@@ -84,12 +70,16 @@ public class Voyageur {
 	public String getSexe() {
 		return this.sexe;
 	}
-	
-	
+
+
+	public List<Appartement> getAppartement_fav() {
+		return appartement_fav;
+	}
+
 	// Les setters
 	
 	public void setId_voy(String id) {
-		this.id_voyageur=id;
+		this.id_Voyageur=id;
 	}
 	
 	public void setNom(String nom) {
@@ -99,23 +89,27 @@ public class Voyageur {
 	public void setPrenom(String prenom) {
 		this.prenom=prenom;
 	}
-	
-	public void setId(int age) {
-		this.age=age;
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 	
 	public void setSexe(String sexe) {
 		this.sexe=sexe;
 	}
-	
 
-	//Ajouter un appartement favorite
-	
-	public void AppartementFav(Appartement app) {
-		appartement_fav.add(app);
+	public void setAppartement_fav(List<Appartement> appartement_fav) {
+		this.appartement_fav = appartement_fav;
 	}
-	
-	
+
+	public List<Appartement> getAppartement_loue() {
+		return appartement_loue;
+	}
+
+	public void setAppartement_loue(List<Appartement> appartement_loue) {
+		this.appartement_loue = appartement_loue;
+	}
+
 	//Affichage
 	
 	@Override

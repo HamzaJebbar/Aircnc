@@ -1,19 +1,14 @@
 package com.model;
 
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-
 @Entity
 public class Appartement {
-	
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id_Appartement;
 	private String adresse;
 	private int nbr_chambres;
@@ -21,26 +16,31 @@ public class Appartement {
 	private double prix_nuit;
 	private boolean reserve;
 	private int nbrPersonne_max;
-	
-	
-	
-	
+
+	@ManyToMany
+	@JoinTable(name="Appart_fav",
+			joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_Voyageur")} )
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
-	
+
+	@ManyToOne
+	private Hote hote;
+
+	@ManyToOne
+	private Voyageur voyageur;
+
 	//Constructeur par defaut
 	public Appartement() {
-		
 		this.adresse="";
-		this.id_Appartement=1;
 		this.nbr_chambres=1;
 		this.nbr_salle_bains=1;
 		this.prix_nuit=40.00;
 		this.nbrPersonne_max=1;
 		this.reserve=false;
+		this.hote = new Hote();
 		
 	}
 	
-	public Appartement(int id, String adresse, int numero, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max) {
+	public Appartement(String adresse, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max, Hote hote) {
 		
 		this.adresse=adresse;
 		this.nbr_chambres=nbr_chambres;
@@ -48,89 +48,87 @@ public class Appartement {
 		this.prix_nuit=prix_nuit;
 		this.nbrPersonne_max=nbrPersonne_max;
 		this.reserve=false;
-		this.id_Appartement=id;
-		
+		this.hote = hote;
+
 	}
 
-	//getters
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	public int getId_App() {
-		return this.id_Appartement;
+	public int getId_Appartement() {
+		return id_Appartement;
 	}
-	
+
+	public void setId_Appartement(int id_Appartement) {
+		this.id_Appartement = id_Appartement;
+	}
+
 	public String getAdresse() {
-		return this.adresse;
+		return adresse;
 	}
-	
-	public int getnbrPersonne_max() {
-		return this.nbrPersonne_max;
+
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
 	}
-	
-	
-	public int nbr_chambres() {
-		return this.nbr_chambres;
+
+	public int getNbr_chambres() {
+		return nbr_chambres;
 	}
-	
+
+	public void setNbr_chambres(int nbr_chambres) {
+		this.nbr_chambres = nbr_chambres;
+	}
+
 	public int getNbr_salle_bains() {
-		return this.nbr_salle_bains;
+		return nbr_salle_bains;
 	}
-	
+
+	public void setNbr_salle_bains(int nbr_salle_bains) {
+		this.nbr_salle_bains = nbr_salle_bains;
+	}
+
 	public double getPrix_nuit() {
-		return this.prix_nuit;
+		return prix_nuit;
 	}
-	
+
+	public void setPrix_nuit(double prix_nuit) {
+		this.prix_nuit = prix_nuit;
+	}
+
 	public boolean isReserve() {
 		return reserve;
 	}
-	
-	
-	//Etablir la relation ManyToMany
-	@ManyToMany
-	
-	@JoinTable(name="LouerAppartement", 
-	joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_voyageur")} )
-	
-	public List<Voyageur> getListVoyageur(){
+
+	public void setReserve(boolean reserve) {
+		this.reserve = reserve;
+	}
+
+	public int getNbrPersonne_max() {
+		return nbrPersonne_max;
+	}
+
+	public void setNbrPersonne_max(int nbrPersonne_max) {
+		this.nbrPersonne_max = nbrPersonne_max;
+	}
+
+	public List<Voyageur> getVoyageurs() {
 		return voyageurs;
 	}
-	//Setters
-	
-	
-	public void settAdresse(String adresse) {
-		this.adresse=adresse;
+
+	public void setVoyageurs(List<Voyageur> voyageurs) {
+		this.voyageurs = voyageurs;
 	}
-	
-	public void setId_App(int id) {
-		this.id_Appartement=id;
+
+	public Hote getHote() {
+		return hote;
 	}
-	
-	public void setnbrPersonne_max( int nbrPersonne_max) {
-		this.nbrPersonne_max=nbrPersonne_max;
+
+	public void setHote(Hote hote) {
+		this.hote = hote;
 	}
-	
-	
-	public void nbr_chambres(int nbr_chambres) {
-		this.nbr_chambres=nbr_chambres;
+
+	public Voyageur getVoyageur() {
+		return voyageur;
 	}
-	
-	public void getNbr_salle_bains(int nbr_salle_bains) {
-		this.nbr_salle_bains=nbr_salle_bains;
+
+	public void setVoyageur(Voyageur voyageur) {
+		this.voyageur = voyageur;
 	}
-	
-	public void getPrix_nuit(float prix_nuit) {
-		this.prix_nuit=prix_nuit;
-	}
-	
-	public void setReserve(boolean reserve) {
-		this.reserve=reserve;
-	}
-    
-	public void addVoyageur(Voyageur voy) {
-		voyageurs.add(voy);
-	}
-	
-	
-	
 }
