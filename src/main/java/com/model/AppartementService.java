@@ -20,7 +20,7 @@ public class AppartementService {
 	
 	public AppartementService() {
 		
-		appartements.add(new Appartement(1,"chiraton",24,2,1,70.50,1));		
+		//appartements.add(new Appartement("chiraton",24,2,1,70.50,1));		
 	}
 	
 	//Afficher la liste des appartements
