@@ -16,9 +16,7 @@ public class Voyageur {
 	private int age;
 	private String sexe;
 
-	@ManyToMany
-	@JoinTable(name="Appart_fav",
-			joinColumns= {@JoinColumn(name="id_Voyageur)")},inverseJoinColumns= {@JoinColumn(name="id_Appartement")} )
+	@ManyToMany(targetEntity=Appartement.class)
 	private List<Appartement> appartement_fav= new ArrayList<Appartement>();
 
 	@OneToMany(cascade= CascadeType.ALL, mappedBy="voyageur")

@@ -17,9 +17,9 @@ public class Appartement {
 	private boolean reserve;
 	private int nbrPersonne_max;
 
-	@ManyToMany
-	@JoinTable(name="Appart_fav",
-			joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_Voyageur")} )
+	@ManyToMany(targetEntity=Voyageur.class)
+	//@JoinTable(name="Appart_fav",
+	//		joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_Voyageur")} )
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 
 	@ManyToOne
