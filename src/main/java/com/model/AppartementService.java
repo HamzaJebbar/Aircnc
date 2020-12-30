@@ -20,7 +20,7 @@ public class AppartementService {
 	
 	public AppartementService() {
 		
-		appartements.add(new Appartement(1,"chiraton",24,2,1,70.50,1));		
+		appartements.add(new Appartement("adresse",2,2,3.5,5,null,null,null));		
 	}
 	
 	//Afficher la liste des appartements
@@ -34,16 +34,15 @@ public class AppartementService {
 	    	
 	}
 	
+// Recuperer un Appartement dont l'id est connu
 	
-	// Recuperer un Appartement dont l'id est connu
-	
-	@RequestMapping (value = "/appartements", method = RequestMethod.GET)
+	@RequestMapping (value = "/appartementss", method = RequestMethod.GET)
     @ResponseStatus (HttpStatus.OK)
     @ResponseBody
     public Appartement Appartement(@PathVariable ("id_Appartement") int id_Appartement) {
 		
         for (Appartement app : appartements) {
-            if (app.getId_App()==id_Appartement) {
+            if (app.getId_Appartement()==id_Appartement) {
                 return app;
             }
         }
@@ -53,84 +52,83 @@ public class AppartementService {
     }
 	
 	
+	//Ajouter un appartement dans la liste
 	
-	
-	//Ajouter un apparetement dans la liste
-	
-	@PostMapping("/appartements")
-	
-	public void addAppartement(@RequestBody Appartement appartement) {
+		@PostMapping("/appartementsss")
 		
-		System.out.println(appartement);
-		appartements.add(appartement);
+		public void addAppartement(@RequestBody Appartement appartement) {
+			
+			System.out.println(appartement);
+			appartements.add(appartement);
+			
+		}
 		
-	}
-	
-	//Supprimer un appartement de la liste
-	
-	@RequestMapping(value = "/appartements/{id_Appartement}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
-	public void supprimerAppartement(@PathVariable("id_Appartement") int id_Appartement) throws Exception{
+		//Supprimer un appartement de la liste
 		
-		for (Appartement app :appartements) {
-			if(app.getId_App()==id_Appartement) {
+		@RequestMapping(value = "/appartements/{id_Appartement}", method = RequestMethod.DELETE)
+		@ResponseStatus(HttpStatus.OK)
+		public void supprimerAppartement(@PathVariable("id_Appartement") int id_Appartement) throws Exception{
+			
+			for (Appartement app :appartements) {
+				if(app.getId_Appartement()==id_Appartement) {
+					
+					appartements.remove(app);
+				}
 				
-				appartements.remove(app);
+				System.out.println("l'appartement n'existe pas !");
+				
+			
 			}
-			
-			System.out.println("l'appartement n'existe pas !");
-			
-		
 		}
-	}
-	
-	
-	//Louer un appartement s'il est disponnible
-	
-	@RequestMapping (value = "/apparetement/{id_Appartement}", method = RequestMethod.PUT)
-    @ResponseStatus (HttpStatus.OK)
-	
-	public void LouerAppartement(@PathVariable ("id_Appartement") int id_Appartement,
-            @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
 		
-		for(Appartement app : appartements) {
-			if (app.getId_App()==id_Appartement) {
-				if(app.isReserve()==false) {
-					app.setReserve(true);
+		
+		//Louer un appartement s'il est disponnible
+		
+		@RequestMapping (value = "/apparetementssss/{id_Appartement}", method = RequestMethod.PUT)
+	    @ResponseStatus (HttpStatus.OK)
+		
+		public void LouerAppartement(@PathVariable ("id_Appartement") int id_Appartement,
+	            @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
+			
+			for(Appartement app : appartements) {
+				if (app.getId_Appartement()==id_Appartement) {
+					if(app.isReserve()==false) {
+						app.setReserve(true);
+					}else {
+						System.out.println("L'appartement est deja reserve");
+					}
 				}else {
-					System.out.println("L'appartement est deja reserve");
+					System.out.println("L'appartement n'existe pas");
 				}
-			}else {
-				System.out.println("L'appartement n'existe pas");
 			}
 		}
-	}
-	
-	
-	
-	//Rendre l'appartement s'il est deja loue
-	
-    
+		
+		
+		//Rendre l'appartement s'il est deja loue
+		
+	    
 
-	@RequestMapping (value = "/apparetement/{id_Appartement}", method = RequestMethod.PUT)
-    @ResponseStatus (HttpStatus.OK)
-	
-	public void RendreAppartement(@PathVariable ("id_Appartement") int id_Appartement,
-            @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
+		@RequestMapping (value = "/apparetement/{id_Appartement}", method = RequestMethod.PUT)
+	    @ResponseStatus (HttpStatus.OK)
 		
-		for(Appartement app : appartements) {
-			if (app.getId_App()==id_Appartement) {
-				if(app.isReserve()==true) {
-					app.setReserve(false);
+		public void RendreAppartement(@PathVariable ("id_Appartement") int id_Appartement,
+	            @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
+			
+			for(Appartement app : appartements) {
+				if (app.getId_Appartement()==id_Appartement) {
+					if(app.isReserve()==true) {
+						app.setReserve(false);
+					}else {
+						System.out.println("L'appartement est libre");
+					}
 				}else {
-					System.out.println("L'appartement est libre");
+					System.out.println("L'appartement n'existe pas");
 				}
-			}else {
-				System.out.println("L'appartement n'existe pas");
 			}
 		}
-	}
-   
+		
+		
+		
 	
 	
 }
