@@ -21,6 +21,7 @@ public class AppartementService {
 	public AppartementService() {
 		
 		appartements.add(new Appartement());
+
 	}
 	
 	//Afficher la liste des appartements
