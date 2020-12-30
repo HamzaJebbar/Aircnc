@@ -20,7 +20,7 @@ public class AppartementService {
 	
 	public AppartementService() {
 		
-		appartements.add(new Appartement(1,"chiraton",24,2,1,70.50,1));		
+		appartements.add(new Appartement());
 	}
 	
 	//Afficher la liste des appartements
@@ -43,7 +43,7 @@ public class AppartementService {
     public Appartement Appartement(@PathVariable ("id_Appartement") int id_Appartement) {
 		
         for (Appartement app : appartements) {
-            if (app.getId_App()==id_Appartement) {
+            if (app.getId_Appartement()==id_Appartement) {
                 return app;
             }
         }
@@ -73,7 +73,7 @@ public class AppartementService {
 	public void supprimerAppartement(@PathVariable("id_Appartement") int id_Appartement) throws Exception{
 		
 		for (Appartement app :appartements) {
-			if(app.getId_App()==id_Appartement) {
+			if(app.getId_Appartement()==id_Appartement) {
 				
 				appartements.remove(app);
 			}
@@ -94,7 +94,7 @@ public class AppartementService {
             @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
 		
 		for(Appartement app : appartements) {
-			if (app.getId_App()==id_Appartement) {
+			if (app.getId_Appartement()==id_Appartement) {
 				if(app.isReserve()==false) {
 					app.setReserve(true);
 				}else {
@@ -119,7 +119,7 @@ public class AppartementService {
             @RequestParam (value = "reserve", required = true) boolean reserve) throws Exception {
 		
 		for(Appartement app : appartements) {
-			if (app.getId_App()==id_Appartement) {
+			if (app.getId_Appartement()==id_Appartement) {
 				if(app.isReserve()==true) {
 					app.setReserve(false);
 				}else {
