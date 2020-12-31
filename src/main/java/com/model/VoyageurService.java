@@ -14,74 +14,68 @@ import org.springframework.stereotype.Controller;
 @RestController
 public class VoyageurService {
 
-	private List<Voyageur> voyageurs= new ArrayList<Voyageur> ();
+	VoyageurRepository voyageurRep;
 	
-	
-	public VoyageurService() {
-		voyageurs.add(new Voyageur("LAMRI","Celia",23,"femme",null,null));
-		
+	public VoyageurService(VoyageurRepository voyageurRep) {
+				this.voyageurRep = voyageurRep;
 	}
 	
     //Afficher la liste des voyageurs
 	
-@RequestMapping (value = "/voyageurs", method = RequestMethod.GET)
-@ResponseStatus (HttpStatus.OK)
-@ResponseBody
+	@RequestMapping (value = "/getVoys", method = RequestMethod.GET)
+	@ResponseStatus (HttpStatus.OK)
+	@ResponseBody
 
 	public List <Voyageur> getListVoyageurs(){
-		return voyageurs;
-		
-	    	
+		return voyageurRep.findAll();
 	}
 	
 	
 	// Recuperer un Voyageur dont l'id est connu
 	
-@RequestMapping (value = "/voyageurss", method = RequestMethod.GET)
-@ResponseStatus (HttpStatus.OK)
-@ResponseBody
+	@RequestMapping (value = "/getVoy/{id_Voyageur}", method = RequestMethod.GET)
+	@ResponseStatus (HttpStatus.OK)
+	@ResponseBody
 	
-	   public Voyageur Voyageur(@PathVariable ("id_Voyageur") int id_Voyageur) {
-				
-	        for (Voyageur voy : voyageurs) {
-	            if (voy.getId_voy()==id_Voyageur ){
-	                return voy;
-	            }
-	        }
+	public Voyageur Voyageur(@PathVariable ("id_Voyageur") int id_Voyageur) {
+		for (Voyageur voy : voyageurRep.findAll()) {
+			if (voy.getId_voy()==id_Voyageur ){
+				return voy;
+			}
+		}
 
-	        System.out.println("Le voyageur n'existe pas");
-	        return null;
-	    }
+		System.out.println("Le voyageur n'existe pas");
+		return null;
+	}
 		
 	//Ajouter un voyageur dans la liste
 		
-@PostMapping("/voyageursss")
+	@PostMapping("/addVoy")
 			
-		public void addVoyageur(@RequestBody Voyageur voyageur) {
-				
-		    System.out.println(voyageur);
-			voyageurs.add(voyageur);
-				
-			}  
+	public void addVoyageur(@RequestBody Voyageur voyageur) {
+
+		voyageurRep.save(voyageur);
+
+		}
 			
-//Supprimer un voyageur de la liste
+	//Supprimer un voyageur de la liste
 			
-		@RequestMapping(value = "/voyageurs/{id_Voyageur}", method = RequestMethod.DELETE)
-		@ResponseStatus(HttpStatus.OK)
-		   
-		public void supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
-				
-				for (Voyageur voy:voyageurs) {	
-					
-					if(voy.getId_voy() == id_Voyageur) {
-						
-						voyageurs.remove(voy);
-					}
-					
-					System.out.println("le voyageur n'existe pas !");
-					
-				}
+	@RequestMapping(value = "/delVoy/{id_Voyageur}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+
+	public void supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
+
+		for (Voyageur voy : voyageurRep.findAll()) {
+
+			if(voy.getId_voy() == id_Voyageur) {
+
+				voyageurRep.deleteById(voy.getId_voy());
 			}
+
+			System.out.println("le voyageur n'existe pas !");
+
+		}
+	}
 			
 	
 		
