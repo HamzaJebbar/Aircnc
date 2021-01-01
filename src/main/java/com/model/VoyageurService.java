@@ -3,9 +3,6 @@ package com.model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpEntity;
-import org.springframework.web.client.RestTemplate;
-
 
 @RestController
 public class VoyageurService {
@@ -24,8 +21,6 @@ public class VoyageurService {
 	
 	@RequestMapping (value = "/getVoys", method = RequestMethod.GET)
 	@ResponseStatus (HttpStatus.OK)
-	@ResponseBody
-
 	public List <Voyageur> getListVoyageurs(){
 		return voyageurRep.findAll();
 	}
@@ -35,15 +30,16 @@ public class VoyageurService {
 	
 	@RequestMapping (value = "/getVoy/{id_Voyageur}", method = RequestMethod.GET)
 	@ResponseStatus (HttpStatus.OK)
-	@ResponseBody
-	
 	public Voyageur Voyageur(@PathVariable ("id_Voyageur") int id_Voyageur) {
+		Voyageur v = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
 			if (voy.getId_voy()==id_Voyageur ){
-				return voy;
+				v = voy;
 			}
 		}
-
+		if(v!=null){
+			return v;
+		}
 		System.out.println("Le voyageur n'existe pas");
 		return null;
 	}
@@ -62,69 +58,80 @@ public class VoyageurService {
 			
 	@RequestMapping(value = "/delVoy/{id_Voyageur}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-
-	public void supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
-
+	public String supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
+		int id=-1;
 		for (Voyageur voy : voyageurRep.findAll()) {
 
 			if(voy.getId_voy() == id_Voyageur) {
-
-				voyageurRep.deleteById(voy.getId_voy());
+				id = id_Voyageur;
 			}
 
-			System.out.println("le voyageur n'existe pas !");
-
+		}
+		if(id==-1)
+			return "Le voyageur n'existe pas";
+		else{
+			voyageurRep.deleteById(id);
+			return "Voyageur supprimé avec succes";
 		}
 	}
 
 
 	@RequestMapping(value = "/addAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	public Voyageur addAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-		Appartement apt = null;
-		for (Appartement a: aptRep.findAll()){
-			if(a.getId_Appartement() == id_Appartement)
-				apt = a;
+		Appartement a = null;
+		Voyageur v = null;
+		for (Appartement apt: aptRep.findAll()){
+			if(apt.getId_Appartement() == id_Appartement && !apt.isReserve())
+
+				for (Voyageur voy : voyageurRep.findAll()) {
+
+					if(voy.getId_voy() == id_Voyageur) {
+						a = apt;
+						v = voy;
+					}
+
+				}
 		}
-		for (Voyageur voy : voyageurRep.findAll()) {
-
-			if(voy.getId_voy() == id_Voyageur) {
-				voy.getAppartement_loue().add(apt);
-				//apt.getVoyageurs().add(voy);
-				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.put("http://localhost:8080/rentApt/"+id_Appartement,void.class);
-				voyageurRep.save(voy);
-				return voy;
-			}
-
+		if(a!=null && v!=null){
+			v.getAppartement_loue().add(a);
+			a.setVoyageur(v);
+			a.setReserve(true);
+			voyageurRep.save(v);
+			aptRep.save(a);
+			return v;
 		}
 		return null;
 	}
 	@RequestMapping(value = "/rmAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	public Voyageur rmAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+		Voyageur v = null;
+		Appartement a = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
-
 			if(voy.getId_voy() == id_Voyageur) {
 				for(Appartement apt: voy.getAppartement_fav()){
 					if(apt.getId_Appartement()==id_Appartement){
-						voy.getAppartement_loue().remove(apt);
-						RestTemplate restTemplate = new RestTemplate();
-						restTemplate.put("http://localhost:8080/rendreApt/"+id_Appartement,void.class);
-						voyageurRep.save(voy);
+						a = apt;
+						v = voy;
+
 					}
 				}
-				return voy;
 			}
 
+		}
+		if(a!=null && v!=null){
+			v.getAppartement_loue().remove(a);
+			a.setVoyageur(null);
+			a.setReserve(false);
+			voyageurRep.save(v);
+			aptRep.save(a);
+			return v;
 		}
 		return null;
 	}
 	@RequestMapping(value = "/addAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	public Voyageur addAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
 		Appartement apt = null;
 		for (Appartement a: aptRep.findAll()){
@@ -135,8 +142,9 @@ public class VoyageurService {
 
 			if(voy.getId_voy() == id_Voyageur) {
 				voy.getAppartement_fav().add(apt);
-				//apt.getVoyageurs().add(voy);
+				apt.getVoyageurs().add(voy);
 				voyageurRep.save(voy);
+				aptRep.save(apt);
 				return voy;
 			}
 
@@ -146,20 +154,27 @@ public class VoyageurService {
 
 	@RequestMapping(value = "/rmAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
 	public Voyageur rmAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+		Voyageur v = null;
+		Appartement a = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
-
 			if(voy.getId_voy() == id_Voyageur) {
 				for(Appartement apt: voy.getAppartement_fav()){
 					if(apt.getId_Appartement()==id_Appartement){
-						voy.getAppartement_fav().remove(apt);
-						voyageurRep.save(voy);
+
+						v = voy;
+						a = apt;
 					}
 				}
-				return voy;
 			}
 
+		}
+		if(v!=null && a!=null){
+			v.getAppartement_fav().remove(a);
+			a.getVoyageurs().remove(v);
+			voyageurRep.save(v);
+			aptRep.save(a);
+			return v;
 		}
 		return null;
 	}

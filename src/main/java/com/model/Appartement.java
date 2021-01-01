@@ -1,5 +1,7 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,15 @@ public class Appartement {
 	private int nbrPersonne_max;
 
 	@ManyToMany(targetEntity=Voyageur.class)
+	@JsonIgnore
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 
 	@ManyToOne
+	@JsonIgnore
 	private Hote hote;
 
 	@ManyToOne
+	@JsonIgnore
 	private Voyageur voyageur;
 
 	//Constructeur par defaut

@@ -1,30 +1,27 @@
 package com.model;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+
 @RestController
-
 public class HoteService {
-    HoteRepository HoteRep;
+    HoteRepository hoteRep;
+    AppartementRepository aptRep;
 
-    public HoteService(HoteRepository hoteRep) {
-        HoteRep = hoteRep;
+    public HoteService(HoteRepository hoteRep, AppartementRepository aptRep) {
+
+        this.hoteRep = hoteRep;
+        this.aptRep = aptRep;
     }
     //Afficher la liste des Hotes
 
     @RequestMapping (value = "/getHotes", method = RequestMethod.GET)
     @ResponseStatus (HttpStatus.OK)
-    @ResponseBody
-
     public List <Hote> getListHotes(){
-        return HoteRep.findAll();
+
+        return hoteRep.findAll();
     }
 
 
@@ -32,11 +29,10 @@ public class HoteService {
 
     @RequestMapping (value = "/getHote/{id_Hote}", method = RequestMethod.GET)
     @ResponseStatus (HttpStatus.OK)
-    @ResponseBody
-
     public Hote Hote(@PathVariable ("id_Hote") int id_Hote) {
-        for (Hote Hote : HoteRep.findAll()) {
+        for (Hote Hote : hoteRep.findAll()) {
             if (Hote.getId_voy()==id_Hote ){
+
                 return Hote;
             }
         }
@@ -48,29 +44,77 @@ public class HoteService {
     //Ajouter un Hote dans la liste
 
     @PostMapping("/addHote")
-
     public void addHote(@RequestBody Hote Hote) {
 
-        HoteRep.save(Hote);
-
+        hoteRep.save(Hote);
     }
 
     //Supprimer un Hote de la liste
 
     @RequestMapping(value = "/delHote/{id_Hote}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-
     public void supprimerHote(@PathVariable("id_Hote") int id_Hote) throws Exception{
-
-        for (Hote Hote : HoteRep.findAll()) {
-
+        int id = -1;
+        for (Hote Hote : hoteRep.findAll()) {
             if(Hote.getId_voy() == id_Hote) {
 
-                HoteRep.deleteById(Hote.getId_voy());
+                id = id_Hote;
             }
-
-            System.out.println("le Hote n'existe pas !");
-
         }
+        if(id!=-1)
+            hoteRep.deleteById(id);
     }
+
+    @RequestMapping(value = "/addHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Hote addHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+        Hote h = null;
+        Appartement a = null;
+        for (Appartement apt: aptRep.findAll()){
+            if(apt.getId_Appartement() == id_Appartement)
+                for (Hote hote : hoteRep.findAll()) {
+                    if(hote.getId_voy() == id_Voyageur) {
+
+                        h = hote;
+                        a = apt;
+                    }
+
+                }
+        }
+        if(h!=null && a!=null){
+            h.getAppartements().add(a);
+            a.setHote(h);
+            hoteRep.save(h);
+            aptRep.save(a);
+            return h;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/rmHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Hote rmHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+        Hote h = null;
+        Appartement a = null;
+        for (Hote hote : hoteRep.findAll()) {
+            if(hote.getId_voy() == id_Voyageur) {
+                for(Appartement apt: hote.getAppartements()){
+                    if(apt.getId_Appartement()==id_Appartement){
+
+                        h = hote;
+                        a = apt;
+                    }
+                }
+            }
+        }
+        if(h!=null && a!=null){
+            h.getAppartements().remove(a);
+            a.setHote(null);
+            hoteRep.save(h);
+            return h;
+        }
+        return null;
+    }
+
+
 }
