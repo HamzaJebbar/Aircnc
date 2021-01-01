@@ -21,6 +21,8 @@ public class AppartementService {
 	@Autowired
 	public AppartementService(AppartementRepository aptRep) {
 		this.aptRep=aptRep;
+		aptRep.save(new Appartement());
+		aptRep.save(new Appartement("testAdr",2,2,2.5,3,null,null,null));
 	}
 	
 	//Afficher la liste des appartements
@@ -106,7 +108,7 @@ public class AppartementService {
 		
 	    
 
-		@RequestMapping (value = "/apparetement/{id_Appartement}", method = RequestMethod.PUT)
+		@RequestMapping (value = "/rendreApt/{id_Appartement}", method = RequestMethod.PUT)
 	    @ResponseStatus (HttpStatus.OK)
 
 		public void RendreAppartement(@PathVariable ("id_Appartement") int id_Appartement)

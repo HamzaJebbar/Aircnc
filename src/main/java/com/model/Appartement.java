@@ -18,8 +18,6 @@ public class Appartement {
 	private int nbrPersonne_max;
 
 	@ManyToMany(targetEntity=Voyageur.class)
-	//@JoinTable(name="Appart_fav",
-	//		joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_Voyageur")} )
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 
 	@ManyToOne
@@ -36,8 +34,6 @@ public class Appartement {
 		this.prix_nuit=40.00;
 		this.nbrPersonne_max=1;
 		this.reserve=false;
-		this.hote = new Hote();
-		
 	}
 
 	public Appartement(String adresse, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max,
