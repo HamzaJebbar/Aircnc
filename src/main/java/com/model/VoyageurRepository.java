@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface VoyageurRepository extends JpaRepository <Voyageur,Integer> {
-	List<Voyageur> findByName(String nom);
+	List<Voyageur> findAll();
 
 }

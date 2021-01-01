@@ -1,5 +1,7 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +19,16 @@ public class Appartement {
 	private boolean reserve;
 	private int nbrPersonne_max;
 
-	@ManyToMany
-	@JoinTable(name="Appart_fav",
-			joinColumns= {@JoinColumn(name="id_Appartement)")},inverseJoinColumns= {@JoinColumn(name="id_Voyageur")} )
+	@ManyToMany(targetEntity=Voyageur.class)
+	@JsonIgnore
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 
 	@ManyToOne
+	@JsonIgnore
 	private Hote hote;
 
 	@ManyToOne
+	@JsonIgnore
 	private Voyageur voyageur;
 
 	//Constructeur par defaut
@@ -36,8 +39,6 @@ public class Appartement {
 		this.prix_nuit=40.00;
 		this.nbrPersonne_max=1;
 		this.reserve=false;
-		this.hote = new Hote();
-		
 	}
 
 	public Appartement(String adresse, int nbr_chambres, int nbr_salle_bains, double prix_nuit, int nbrPersonne_max,
