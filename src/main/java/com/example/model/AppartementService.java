@@ -1,4 +1,5 @@
-package com.model;
+package com.example.model;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,10 @@ public class AppartementService {
 
 	AppartementRepository aptRep;
 
-	@Autowired
 	public AppartementService(AppartementRepository aptRep) {
 		this.aptRep=aptRep;
-		aptRep.save(new Appartement());
-		aptRep.save(new Appartement("testAdr",2,2,2.5,3,null,null,null));
+		//aptRep.save(new Appartement());
+		//aptRep.save(new Appartement("testAdr",2,2,2.5,3,null,null,null));
 	}
 	
 	//Afficher la liste des appartements

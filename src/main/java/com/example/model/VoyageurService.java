@@ -1,4 +1,5 @@
-package com.model;
+package com.example.model;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,8 @@ public class VoyageurService {
 	public VoyageurService(VoyageurRepository voyageurRep, AppartementRepository aptRep) {
 				this.voyageurRep = voyageurRep;
 				this.aptRep = aptRep;
-				voyageurRep.save(new Voyageur());
-				voyageurRep.save(new Voyageur("nn","pp",15,"homme",null,null));
+				//voyageurRep.save(new Voyageur());
+				//voyageurRep.save(new Voyageur("nn","pp",15,"homme",null,null));
 	}
 	
     //Afficher la liste des voyageurs

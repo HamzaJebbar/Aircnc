@@ -1,4 +1,4 @@
-package com.model;
+package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+//@Table(name="appartement")
 public class Appartement {
 
 	@Id
@@ -19,7 +20,7 @@ public class Appartement {
 	private boolean reserve;
 	private int nbrPersonne_max;
 
-	@ManyToMany(targetEntity=Voyageur.class)
+	@ManyToMany(targetEntity=Voyageur.class, mappedBy = "appartement_fav")
 	@JsonIgnore
 	private List<Voyageur> voyageurs= new ArrayList<Voyageur>();
 

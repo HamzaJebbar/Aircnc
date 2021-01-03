@@ -1,11 +1,13 @@
-package com.model;
+package com.example.model;
+
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.*;
 
 @Entity
+//@Table(name="voyageur")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Voyageur {
 
 	@Id
@@ -17,6 +19,11 @@ public class Voyageur {
 	private String sexe;
 
 	@ManyToMany(targetEntity=Appartement.class)
+	@JoinTable(
+			name = "VoyAptFav",
+			joinColumns = {@JoinColumn(name = "id_Voyaguer")},
+			inverseJoinColumns = {@JoinColumn(name = "id_Appartement")}
+	)
 	private List<Appartement> appartement_fav= new ArrayList<Appartement>();
 
 	@OneToMany(cascade= CascadeType.ALL, mappedBy="voyageur")
