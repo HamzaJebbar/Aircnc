@@ -1,10 +1,12 @@
 package com.model;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 
 @RestController
+@CrossOrigin
 public class VoyageurService {
 
 	VoyageurRepository voyageurRep;
@@ -21,8 +23,8 @@ public class VoyageurService {
 	
 	@RequestMapping (value = "/getVoys", method = RequestMethod.GET)
 	@ResponseStatus (HttpStatus.OK)
-	public List <Voyageur> getListVoyageurs(){
-		return voyageurRep.findAll();
+	public ResponseEntity<List<Voyageur>> getListVoyageurs(){
+		return new ResponseEntity<>(voyageurRep.findAll(),HttpStatus.OK);
 	}
 	
 	
@@ -30,7 +32,7 @@ public class VoyageurService {
 	
 	@RequestMapping (value = "/getVoy/{id_Voyageur}", method = RequestMethod.GET)
 	@ResponseStatus (HttpStatus.OK)
-	public Voyageur Voyageur(@PathVariable ("id_Voyageur") int id_Voyageur) {
+	public ResponseEntity<Voyageur> getVoy(@PathVariable ("id_Voyageur") int id_Voyageur) {
 		Voyageur v = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
 			if (voy.getId_voy()==id_Voyageur ){
@@ -38,19 +40,20 @@ public class VoyageurService {
 			}
 		}
 		if(v!=null){
-			return v;
+			return new ResponseEntity<>(v, HttpStatus.OK);
 		}
-		System.out.println("Le voyageur n'existe pas");
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
 	}
 		
 	//Ajouter un voyageur dans la liste
 		
 	@PostMapping("/addVoy")
 			
-	public void addVoyageur(@RequestBody Voyageur voyageur) {
+	public ResponseEntity<Voyageur> addVoyageur(@RequestBody Voyageur voyageur) {
 
 		voyageurRep.save(voyageur);
+		return new ResponseEntity<>(voyageur, HttpStatus.CREATED);
 
 		}
 			
@@ -58,7 +61,7 @@ public class VoyageurService {
 			
 	@RequestMapping(value = "/delVoy/{id_Voyageur}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public String supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
+	public ResponseEntity<Voyageur> supprimerVoyageur(@PathVariable("id_Voyageur") int id_Voyageur) throws Exception{
 		int id=-1;
 		for (Voyageur voy : voyageurRep.findAll()) {
 
@@ -67,15 +70,30 @@ public class VoyageurService {
 			}
 
 		}
-		if(id==-1)
-			return "Le voyageur n'existe pas";
-		else{
+		if(id==-1) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		} else{
 			voyageurRep.deleteById(id);
-			return "Voyageur supprimé avec succes";
+			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
 	}
 
+	@PutMapping(path = "updateVoy/{id_Voyageur}")
+	public ResponseEntity<Voyageur> updateVoy(@RequestBody Voyageur voyageur, @PathVariable("id_Voyageur") int id_Voyageur){
+		int id=-1;
+		for (Voyageur voy : voyageurRep.findAll()) {
+			if(voy.getId_voy() == id_Voyageur) {
+				id = id_Voyageur;
+			}
 
+		}
+		if(id==-1) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		} else{
+			voyageurRep.save(voyageur);
+			return new ResponseEntity<>(voyageur, HttpStatus.OK);
+		}
+	}
 	@RequestMapping(value = "/addAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Voyageur addAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
