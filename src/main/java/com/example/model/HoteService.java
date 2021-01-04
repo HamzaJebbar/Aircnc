@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
+@CrossOrigin
 public class HoteService {
     HoteRepository hoteRep;
     AppartementRepository aptRep;
@@ -116,6 +118,23 @@ public class HoteService {
         }
         return null;
     }
+    
+    //Mettre à jours un hote
+    @PutMapping(path = "updateHot/{id_Hote}")
+	public ResponseEntity<Hote> updateHote(@RequestBody Hote hote, @PathVariable("id_Hote") int id_Hote){
+		int id=-1;
+		for (Hote hot : hoteRep.findAll()) {
+			if(hot.getId_voy() == id_Hote) {
+				id = id_Hote;
+			}
 
+		}
+		if(id==-1) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		} else{
+			hoteRep.save(hote);
+			return new ResponseEntity<>(hote, HttpStatus.OK);
+		}
+	}
 
 }
