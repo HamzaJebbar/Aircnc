@@ -95,9 +95,9 @@ public class VoyageurService {
 			return new ResponseEntity<>(voyageur, HttpStatus.OK);
 		}
 	}
-	@RequestMapping(value = "/addAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+	@RequestMapping(value = "/addAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Voyageur addAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+	public ResponseEntity<Voyageur> addAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
 		Appartement a = null;
 		Voyageur v = null;
 		for (Appartement apt: aptRep.findAll()){
@@ -118,13 +118,13 @@ public class VoyageurService {
 			a.setReserve(true);
 			voyageurRep.save(v);
 			aptRep.save(a);
-			return v;
+			return new ResponseEntity<>(v, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
-	@RequestMapping(value = "/rmAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+	@RequestMapping(value = "/rmAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public Voyageur rmAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+	public ResponseEntity<Voyageur> rmAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
 		Voyageur v = null;
 		Appartement a = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
@@ -145,13 +145,13 @@ public class VoyageurService {
 			a.setReserve(false);
 			voyageurRep.save(v);
 			aptRep.save(a);
-			return v;
+			return new ResponseEntity<>(v, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
-	@RequestMapping(value = "/addAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+	@RequestMapping(value = "/addAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Voyageur addAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+	public ResponseEntity<Voyageur> addAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
 		Appartement apt = null;
 		for (Appartement a: aptRep.findAll()){
 			if(a.getId_Appartement() == id_Appartement)
@@ -164,16 +164,16 @@ public class VoyageurService {
 				apt.getVoyageurs().add(voy);
 				voyageurRep.save(voy);
 				aptRep.save(apt);
-				return voy;
+				return new ResponseEntity<>(voy, HttpStatus.OK);
 			}
 
 		}
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/rmAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
+	@RequestMapping(value = "/rmAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public Voyageur rmAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+	public ResponseEntity<Voyageur> rmAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
 		Voyageur v = null;
 		Appartement a = null;
 		for (Voyageur voy : voyageurRep.findAll()) {
@@ -193,9 +193,9 @@ public class VoyageurService {
 			a.getVoyageurs().remove(v);
 			voyageurRep.save(v);
 			aptRep.save(a);
-			return v;
+			return new ResponseEntity<>(v, HttpStatus.OK);
 		}
-		return null;
+		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 	}
 
 

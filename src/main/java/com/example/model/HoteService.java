@@ -22,9 +22,9 @@ public class HoteService {
 
     @RequestMapping (value = "/getHotes", method = RequestMethod.GET)
     @ResponseStatus (HttpStatus.OK)
-    public List <Hote> getListHotes(){
+    public ResponseEntity<List <Hote>> getListHotes(){
 
-        return hoteRep.findAll();
+        return new ResponseEntity<>(hoteRep.findAll(), HttpStatus.OK);
     }
 
 
@@ -32,31 +32,30 @@ public class HoteService {
 
     @RequestMapping (value = "/getHote/{id_Hote}", method = RequestMethod.GET)
     @ResponseStatus (HttpStatus.OK)
-    public Hote Hote(@PathVariable ("id_Hote") int id_Hote) {
-        for (Hote Hote : hoteRep.findAll()) {
-            if (Hote.getId_voy()==id_Hote ){
+    public ResponseEntity<Hote> Hote(@PathVariable ("id_Hote") int id_Hote) {
+        for (Hote hote : hoteRep.findAll()) {
+            if (hote.getId_voy()==id_Hote ){
 
-                return Hote;
+                return new ResponseEntity<>(hote, HttpStatus.OK);
             }
         }
 
-        System.out.println("Le Hote n'existe pas");
-        return null;
-    }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);    }
 
     //Ajouter un Hote dans la liste
 
     @PostMapping("/addHote")
-    public void addHote(@RequestBody Hote Hote) {
+    public ResponseEntity<Hote> addHote(@RequestBody Hote hote) {
 
-        hoteRep.save(Hote);
+        hoteRep.save(hote);
+        return new ResponseEntity<>(hote, HttpStatus.OK);
     }
 
     //Supprimer un Hote de la liste
 
     @RequestMapping(value = "/delHote/{id_Hote}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void supprimerHote(@PathVariable("id_Hote") int id_Hote) throws Exception{
+    public ResponseEntity<Hote> supprimerHote(@PathVariable("id_Hote") int id_Hote) throws Exception{
         int id = -1;
         for (Hote Hote : hoteRep.findAll()) {
             if(Hote.getId_voy() == id_Hote) {
@@ -64,13 +63,17 @@ public class HoteService {
                 id = id_Hote;
             }
         }
-        if(id!=-1)
+        if(id!=-1) {
             hoteRep.deleteById(id);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/addHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Hote addHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+    public ResponseEntity<Hote> addHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
         Hote h = null;
         Appartement a = null;
         for (Appartement apt: aptRep.findAll()){
@@ -89,14 +92,14 @@ public class HoteService {
             a.setHote(h);
             hoteRep.save(h);
             aptRep.save(a);
-            return h;
+            return new ResponseEntity<>(h, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/rmHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Hote rmHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
+    public ResponseEntity<Hote> rmHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
         Hote h = null;
         Appartement a = null;
         for (Hote hote : hoteRep.findAll()) {
@@ -114,12 +117,12 @@ public class HoteService {
             h.getAppartements().remove(a);
             a.setHote(null);
             hoteRep.save(h);
-            return h;
+            return new ResponseEntity<>(h, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
     
-    //Mettre à jours un hote
+    //Mettre a jours un hote
     @PutMapping(path = "updateHot/{id_Hote}")
 	public ResponseEntity<Hote> updateHote(@RequestBody Hote hote, @PathVariable("id_Hote") int id_Hote){
 		int id=-1;
