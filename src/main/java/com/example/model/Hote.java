@@ -30,9 +30,11 @@ public class Hote extends Voyageur{
 		this.appartements = appartements;
 	}
 
-	public  List<Appartement>  addApt(Appartement appartement){
-		this.appartements.add(appartement);
-		return this.appartements;
+	public void copy(Voyageur voyageur){
+		this.setNom(voyageur.getNom());
+		this.setPrenom(voyageur.getPrenom());
+		this.setAge(voyageur.getAge());
+		this.setSexe(voyageur.getSexe());
 	}
 	public String toString (){
         return "Hote[id:" + getId_voy()+ ",nom:" + getNom() + ",prenom:"+ getPrenom() + ",age:" + getAge() + ",sexe:" +getSexe() +"] " ;

@@ -13,13 +13,13 @@ import org.springframework.http.HttpStatus;
 public class VoyageurService {
 
 	VoyageurRepository voyageurRep;
+	HoteRepository hoteRep;
 	AppartementRepository aptRep;
 
-	public VoyageurService(VoyageurRepository voyageurRep, AppartementRepository aptRep) {
+	public VoyageurService(VoyageurRepository voyageurRep, AppartementRepository aptRep,HoteRepository hoteRep) {
 				this.voyageurRep = voyageurRep;
 				this.aptRep = aptRep;
-				//voyageurRep.save(new Voyageur());
-				//voyageurRep.save(new Voyageur("nn","pp",15,"homme",null,null));
+				this.hoteRep = hoteRep;
 	}
 	
     //Afficher la liste des voyageurs
@@ -81,21 +81,17 @@ public class VoyageurService {
 		}
 	}
 
-	@PutMapping(path = "updateVoy/{id_Voyageur}")
-	public ResponseEntity<Voyageur> updateVoy(@RequestBody Voyageur voyageur, @PathVariable("id_Voyageur") int id_Voyageur){
-		int id=-1;
-		for (Voyageur voy : voyageurRep.findAll()) {
-			if(voy.getId_voy() == id_Voyageur) {
-				id = id_Voyageur;
+	@PutMapping(path = "updateVoy")
+	public ResponseEntity<Voyageur> updateVoy(@RequestBody Voyageur voyageur){
+		for(Hote hote: hoteRep.findAll()){
+			if(hote.getId_voy()==voyageur.getId_voy()){
+				hote.copy(voyageur);
+				hoteRep.save(hote);
+				return new ResponseEntity<>(hote, HttpStatus.OK);
 			}
-
 		}
-		if(id==-1) {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-		} else{
-			voyageurRep.save(voyageur);
-			return new ResponseEntity<>(voyageur, HttpStatus.OK);
-		}
+		voyageurRep.save(voyageur);
+		return new ResponseEntity<>(voyageur, HttpStatus.OK);
 	}
 	@RequestMapping(value = "/rentApt/{id_Voyageur}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)

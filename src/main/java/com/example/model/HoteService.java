@@ -74,22 +74,5 @@ public class HoteService {
         }
     }
 
-    //Mettre a jours un hote
-    @PutMapping(path = "updateHot/{id_Hote}")
-	public ResponseEntity<Hote> updateHote(@RequestBody Hote hote, @PathVariable("id_Hote") int id_Hote){
-		int id=-1;
-		for (Hote hot : hoteRep.findAll()) {
-			if(hot.getId_voy() == id_Hote) {
-				id = id_Hote;
-			}
-
-		}
-		if(id==-1) {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-		} else{
-			hoteRep.save(hote);
-			return new ResponseEntity<>(hote, HttpStatus.OK);
-		}
-	}
 
 }
