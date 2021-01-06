@@ -21,10 +21,12 @@ public class AppartementService {
 
 	AppartementRepository aptRep;
 	HoteRepository hoteRep;
+	VoyageurRepository voyageurRep;
 
-	public AppartementService(AppartementRepository aptRep, HoteRepository hoteRep) {
+	public AppartementService(AppartementRepository aptRep, HoteRepository hoteRep,VoyageurRepository voyageurRep) {
 		this.aptRep=aptRep;
 		this.hoteRep = hoteRep;
+		this.voyageurRep = voyageurRep;
 	}
 	
 	//Afficher la liste des appartements
@@ -87,6 +89,10 @@ public class AppartementService {
 				}
 			}
 			if(a!=null) {
+				for(Voyageur v: a.getVoyageurs()){
+					v.getAppartement_fav().remove(a);
+					voyageurRep.save(v);
+				}
 				a.getVoyageurs().clear();
 				aptRep.save(a);
 				aptRep.deleteById(a.getId_Appartement());
