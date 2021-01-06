@@ -56,72 +56,24 @@ public class HoteService {
     @RequestMapping(value = "/delHote/{id_Hote}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Hote> supprimerHote(@PathVariable("id_Hote") int id_Hote) throws Exception{
-        int id = -1;
-        for (Hote Hote : hoteRep.findAll()) {
-            if(Hote.getId_voy() == id_Hote) {
+        Hote h = null;
+        for (Hote hote : hoteRep.findAll()) {
+            if(hote.getId_voy() == id_Hote) {
 
-                id = id_Hote;
+                h = hote;
             }
         }
-        if(id!=-1) {
-            hoteRep.deleteById(id);
+        if(h != null) {
+            for(Appartement appartement: h.getAppartements()) {
+                aptRep.delete(appartement);
+            }
+            hoteRep.delete(h);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @RequestMapping(value = "/addHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Hote> addHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-        Hote h = null;
-        Appartement a = null;
-        for (Appartement apt: aptRep.findAll()){
-            if(apt.getId_Appartement() == id_Appartement)
-                for (Hote hote : hoteRep.findAll()) {
-                    if(hote.getId_voy() == id_Voyageur) {
-
-                        h = hote;
-                        a = apt;
-                    }
-
-                }
-        }
-        if(h!=null && a!=null){
-            h.getAppartements().add(a);
-            a.setHote(h);
-            hoteRep.save(h);
-            aptRep.save(a);
-            return new ResponseEntity<>(h, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    }
-
-    @RequestMapping(value = "/rmHoteApt/{id_Voyageur}/{id_Appartement}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Hote> rmHoteApt(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-        Hote h = null;
-        Appartement a = null;
-        for (Hote hote : hoteRep.findAll()) {
-            if(hote.getId_voy() == id_Voyageur) {
-                for(Appartement apt: hote.getAppartements()){
-                    if(apt.getId_Appartement()==id_Appartement){
-
-                        h = hote;
-                        a = apt;
-                    }
-                }
-            }
-        }
-        if(h!=null && a!=null){
-            h.getAppartements().remove(a);
-            a.setHote(null);
-            hoteRep.save(h);
-            return new ResponseEntity<>(h, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    }
-    
     //Mettre a jours un hote
     @PutMapping(path = "updateHot/{id_Hote}")
 	public ResponseEntity<Hote> updateHote(@RequestBody Hote hote, @PathVariable("id_Hote") int id_Hote){

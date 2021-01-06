@@ -4,6 +4,8 @@ package com.example.model;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 
 @RestController
@@ -95,109 +97,45 @@ public class VoyageurService {
 			return new ResponseEntity<>(voyageur, HttpStatus.OK);
 		}
 	}
-	@RequestMapping(value = "/addAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/rentApt/{id_Voyageur}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Voyageur> addAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-		Appartement a = null;
-		Voyageur v = null;
-		for (Appartement apt: aptRep.findAll()){
-			if(apt.getId_Appartement() == id_Appartement && !apt.isReserve())
+	public ResponseEntity<Voyageur> aptLoue(@PathVariable("id_Voyageur") int id_Voyageur,@RequestBody Appartement appartement) {
+		Voyageur voyageur = voyageurRep.findById(id_Voyageur).get();
+		Appartement apt = aptRep.findById(appartement.getId_Appartement()).get();
+		if(voyageur.getAppartement_loue().contains(apt)){
+			voyageur.getAppartement_loue().remove(apt);
+			apt.setVoyageur(null);
+			apt.setReserve(false);
+			aptRep.save(apt);
+			voyageurRep.save(voyageur);
+		} else {
+			voyageur.getAppartement_loue().add(apt);
+			apt.setVoyageur(voyageur);
+			apt.setReserve(true);
+			voyageurRep.save(voyageur);
+			aptRep.save(apt);
 
-				for (Voyageur voy : voyageurRep.findAll()) {
-
-					if(voy.getId_voy() == id_Voyageur) {
-						a = apt;
-						v = voy;
-					}
-
-				}
 		}
-		if(a!=null && v!=null){
-			v.getAppartement_loue().add(a);
-			a.setVoyageur(v);
-			a.setReserve(true);
-			voyageurRep.save(v);
-			aptRep.save(a);
-			return new ResponseEntity<>(v, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(voyageur, HttpStatus.OK);
 	}
-	@RequestMapping(value = "/rmAptLoue/{id_Voyageur}/{id_Appartement}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/aptFav/{id_Voyageur}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Voyageur> rmAptLoue(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-		Voyageur v = null;
-		Appartement a = null;
-		for (Voyageur voy : voyageurRep.findAll()) {
-			if(voy.getId_voy() == id_Voyageur) {
-				for(Appartement apt: voy.getAppartement_fav()){
-					if(apt.getId_Appartement()==id_Appartement){
-						a = apt;
-						v = voy;
-
-					}
-				}
-			}
+	public ResponseEntity<Voyageur> aptFav(@PathVariable("id_Voyageur") int id_Voyageur,@RequestBody Appartement appartement) {
+		Voyageur voyageur = voyageurRep.findById(id_Voyageur).get();
+		Appartement apt = aptRep.findById(appartement.getId_Appartement()).get();
+		if(voyageur.getAppartement_fav().contains(apt)){
+			voyageur.getAppartement_fav().remove(apt);
+			apt.getVoyageurs().remove(voyageur);
+			aptRep.save(apt);
+			voyageurRep.save(voyageur);
+		} else {
+			voyageur.getAppartement_fav().add(apt);
+			apt.getVoyageurs().add(voyageur);
+			voyageurRep.save(voyageur);
+			aptRep.save(apt);
 
 		}
-		if(a!=null && v!=null){
-			v.getAppartement_loue().remove(a);
-			a.setVoyageur(null);
-			a.setReserve(false);
-			voyageurRep.save(v);
-			aptRep.save(a);
-			return new ResponseEntity<>(v, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(voyageur, HttpStatus.OK);
 	}
-	@RequestMapping(value = "/addAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Voyageur> addAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-		Appartement apt = null;
-		for (Appartement a: aptRep.findAll()){
-			if(a.getId_Appartement() == id_Appartement)
-				apt = a;
-		}
-		for (Voyageur voy : voyageurRep.findAll()) {
-
-			if(voy.getId_voy() == id_Voyageur) {
-				voy.getAppartement_fav().add(apt);
-				apt.getVoyageurs().add(voy);
-				voyageurRep.save(voy);
-				aptRep.save(apt);
-				return new ResponseEntity<>(voy, HttpStatus.OK);
-			}
-
-		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-	}
-
-	@RequestMapping(value = "/rmAptFav/{id_Voyageur}/{id_Appartement}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Voyageur> rmAptFav(@PathVariable("id_Appartement") int id_Appartement, @PathVariable("id_Voyageur") int id_Voyageur) {
-		Voyageur v = null;
-		Appartement a = null;
-		for (Voyageur voy : voyageurRep.findAll()) {
-			if(voy.getId_voy() == id_Voyageur) {
-				for(Appartement apt: voy.getAppartement_fav()){
-					if(apt.getId_Appartement()==id_Appartement){
-
-						v = voy;
-						a = apt;
-					}
-				}
-			}
-
-		}
-		if(v!=null && a!=null){
-			v.getAppartement_fav().remove(a);
-			a.getVoyageurs().remove(v);
-			voyageurRep.save(v);
-			aptRep.save(a);
-			return new ResponseEntity<>(v, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-	}
-
-
 
 }
