@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 
 @RestController
+@CrossOrigin
 public class AppartementService {
 
 	AppartementRepository aptRep;
